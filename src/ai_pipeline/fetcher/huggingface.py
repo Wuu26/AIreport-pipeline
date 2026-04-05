@@ -31,12 +31,19 @@ def _parse_hf_html(html: str) -> list[RawItem]:
         title = title_el.get_text(strip=True)
         href = link_el["href"]
         url = href if href.startswith("http") else f"https://huggingface.co{href}"
-        # Try to get upvote count
+        # Try to get upvote count — look for vote button elements first
         upvotes = 0
-        for el in article.find_all(["button", "span", "div"]):
-            text = el.get_text(strip=True)
+        vote_el = article.select_one("[data-target*='vote'], [class*='vote'], [class*='upvote']")
+        if vote_el:
+            text = vote_el.get_text(strip=True)
             if text.isdigit():
-                upvotes = max(upvotes, int(text))
+                upvotes = int(text)
+        else:
+            # Fallback: find small standalone digits (≤4 digits, excludes years like 2024)
+            for el in article.find_all(["button", "span"]):
+                text = el.get_text(strip=True)
+                if text.isdigit() and len(text) <= 3:
+                    upvotes = max(upvotes, int(text))
         if title and url:
             items.append(RawItem(
                 title=title,

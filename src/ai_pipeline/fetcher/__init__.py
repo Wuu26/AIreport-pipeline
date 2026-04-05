@@ -1,12 +1,15 @@
 """Fetcher package — parallel async entry point."""
 from __future__ import annotations
 import asyncio
+import logging
 import httpx
 from ai_pipeline.models import RawItem
 from .arxiv import fetch_arxiv
 from .huggingface import fetch_huggingface
 from .rss import fetch_all_rss
 from .websearch import fetch_websearch
+
+logger = logging.getLogger(__name__)
 
 
 async def fetch_all() -> list[RawItem]:
@@ -20,10 +23,12 @@ async def fetch_all() -> list[RawItem]:
             return_exceptions=True,
         )
     items: list[RawItem] = []
-    for result in results:
+    source_names = ["arxiv", "huggingface", "rss", "websearch"]
+    for name, result in zip(source_names, results):
         if isinstance(result, list):
             items.extend(result)
-        # exceptions are silently skipped — each source is optional
+        elif isinstance(result, Exception):
+            logger.warning("Fetcher %s failed: %s", name, result)
 
     # Deduplicate by URL
     seen: set[str] = set()

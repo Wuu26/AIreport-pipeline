@@ -1,10 +1,13 @@
 """Web search fetcher — uses DuckDuckGo HTML search as fallback."""
 from __future__ import annotations
 from datetime import datetime, timezone
+import logging
 import httpx
 from bs4 import BeautifulSoup
 from tenacity import retry, stop_after_attempt, wait_exponential
 from ai_pipeline.models import RawItem
+
+logger = logging.getLogger(__name__)
 
 SEARCH_QUERIES = [
     "AI research papers today 2026",
@@ -54,6 +57,6 @@ async def fetch_websearch(client: httpx.AsyncClient) -> list[RawItem]:
         try:
             results = await _ddg_search(client, query)
             items.extend(results)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning("Web search query %r failed: %s", query, e)
     return items

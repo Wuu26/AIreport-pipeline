@@ -1,11 +1,14 @@
 """Generic RSS fetcher using feedparser."""
 from __future__ import annotations
 from datetime import datetime, timezone
+import logging
 import feedparser
 import httpx
 from tenacity import retry, stop_after_attempt, wait_exponential
 from ai_pipeline.models import RawItem
 from ai_pipeline.config import RSS_SOURCES
+
+logger = logging.getLogger(__name__)
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=1, max=10))
@@ -65,6 +68,6 @@ async def fetch_all_rss(client: httpx.AsyncClient) -> list[RawItem]:
         try:
             results = await fetch_rss_source(client, name, url)
             items.extend(results)
-        except Exception:
-            pass  # individual source failure doesn't abort others
+        except Exception as e:
+            logger.warning("RSS source %s failed: %s", name, e)
     return items
