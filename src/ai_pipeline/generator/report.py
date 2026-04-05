@@ -67,7 +67,7 @@ Format:
 <description>
 
 ---
-_来源：arXiv · HuggingFace Papers · VentureBeat AI · The Decoder · MIT Tech Review · TechCrunch AI · 量子位 · 机器之心 · 36氪 | 生成时间：{today}_
+_来源：[arXiv](https://arxiv.org) · [HuggingFace Papers](https://huggingface.co/papers) · [VentureBeat AI](https://venturebeat.com/category/ai) · [The Decoder](https://the-decoder.com) · [MIT Tech Review](https://www.technologyreview.com) · [TechCrunch AI](https://techcrunch.com/category/artificial-intelligence/) · [量子位](https://www.qbitai.com) · [机器之心](https://www.jiqizhixin.com) · [36氪](https://36kr.com) | 生成时间：{today}_
 ```
 
 Rules:
@@ -77,18 +77,6 @@ Rules:
 - Keep descriptions concise (one sentence)
 - If a section has no items, omit it entirely
 """
-
-
-def _group_items(items: list[ScoredItem]) -> dict[str, list[ScoredItem]]:
-    """Group items by category, sorted by score descending."""
-    groups: dict[str, list[ScoredItem]] = {}
-    for item in items:
-        if item.category == "skip":
-            continue
-        groups.setdefault(item.category, []).append(item)
-    for cat in groups:
-        groups[cat].sort(key=lambda x: x.score, reverse=True)
-    return groups
 
 
 def _items_to_json(items: list[ScoredItem]) -> str:
