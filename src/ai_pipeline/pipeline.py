@@ -99,11 +99,17 @@ async def run_pipeline() -> dict:
 
     # Stage 5: Send
     t0 = time.monotonic()
-    sent = await send_report(report)
-    run_log["stages"]["send"] = {
-        "success": sent,
-        "elapsed_s": round(time.monotonic() - t0, 2),
-    }
+    try:
+        sent = await send_report(report)
+        run_log["stages"]["send"] = {
+            "success": sent,
+            "elapsed_s": round(time.monotonic() - t0, 2),
+        }
+    except Exception as e:
+        await _alert(f"Pipeline failed at SEND: {e}")
+        run_log["stages"]["send"] = {"error": str(e)}
+        _save_run_log(run_log)
+        return run_log
 
     run_log["success"] = sent
     log_path = _save_run_log(run_log)
