@@ -36,3 +36,14 @@ KEYWORD_BLACKLIST = [
     "sponsored", "advertisement", "partner content",
     "课程报名", "招生", "打折", "限时优惠",
 ]
+
+
+def validate_config() -> None:
+    """Raise ValueError if required secrets are missing."""
+    missing = []
+    if not DEEPSEEK_API_KEY:
+        missing.append("DEEPSEEK_API_KEY")
+    if not SLACK_WEBHOOK_URL:
+        missing.append("SLACK_WEBHOOK_URL")
+    if missing:
+        raise ValueError(f"Missing required environment variables: {', '.join(missing)}")
