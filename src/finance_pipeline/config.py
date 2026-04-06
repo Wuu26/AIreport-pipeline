@@ -17,7 +17,7 @@ DEEPSEEK_MODEL: str = "deepseek-chat"
 WATCHLIST = [
     ("NVDA",      "英伟达",   "USD"),
     ("TSLA",      "特斯拉",   "USD"),
-    ("BABA",      "阿里巴巴", "USD"),
+    ("9988.HK",   "阿里巴巴", "HKD"),
     ("0700.HK",   "腾讯",     "HKD"),
     ("688981.SS", "中芯国际", "CNY"),
 ]
