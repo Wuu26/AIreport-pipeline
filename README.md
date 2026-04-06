@@ -6,7 +6,7 @@
 
 ## 功能概览
 
-### 📰 AI 每日简报（`ai_pipeline`）
+### AI领域简报（`ai_pipeline`）
 
 每天 **09:00 北京时间** 自动运行，抓取当日最重要的 AI 资讯发送到 Slack `#帮助-ai报告`。
 
@@ -23,7 +23,7 @@
 
 ---
 
-### 📊 金融市场报告（`finance_pipeline`）
+### 金融市场简报（`finance_pipeline`）
 
 每个工作日两次自动运行，发送到 Slack `#财经报告`。
 
@@ -40,7 +40,7 @@
 
 **数据来源：** Yahoo Finance（yfinance）、CoinGecko API（免费，无需 Key）、Reuters/CNBC/东方财富 RSS
 
-> ⚠️ 报告仅供参考，不构成投资建议。行情数据有 15 分钟延迟。
+> WARNING： 报告仅供参考，不构成投资建议。行情数据有 15 分钟延迟。
 
 ---
 
