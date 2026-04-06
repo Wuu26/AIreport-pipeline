@@ -1,6 +1,8 @@
 """Report generator — produces Slack markdown from scored items."""
 from __future__ import annotations
+import json
 import logging
+from collections import defaultdict
 from datetime import date
 from openai import AsyncOpenAI
 from ai_pipeline.models import ScoredItem
@@ -71,11 +73,13 @@ _来源：[arXiv](https://arxiv.org) · [HuggingFace Papers](https://huggingface
 ```
 
 Rules:
-- "今日头条" contains the 2-3 highest scoring items regardless of category
+- "今日头条" contains the top 2 highest scoring items regardless of category (no more than 2)
+- Each section has at most 3 items
 - Each item is two lines: title+link on line 1, description on line 2, blank line between items
 - Use Slack bold syntax: *text* (not **text**)
 - Keep descriptions concise (one sentence)
 - If a section has no items, omit it entirely
+- Quality over quantity: fewer excellent items is better than many mediocre ones
 """
 
 
@@ -102,6 +106,24 @@ async def generate_report(items: list[ScoredItem]) -> str:
     if not items:
         today = date.today().isoformat()
         return f"*🤖 AI 每日简报 | {today}*\n\n_今日暂无高质量内容。_"
+
+    # Cap items: score>=0.85 always included; soft cap 12 total, max 3 per category
+    MUST_INCLUDE_THRESHOLD = 0.85
+    SOFT_CAP = 12
+    MAX_PER_CATEGORY = 3
+    items_sorted = sorted(items, key=lambda x: x.score, reverse=True)
+    cat_count: dict[str, int] = defaultdict(int)
+    capped: list[ScoredItem] = []
+    for item in items_sorted:
+        if item.category == "skip":
+            continue
+        must_include = item.score >= MUST_INCLUDE_THRESHOLD
+        under_cat_cap = cat_count[item.category] < MAX_PER_CATEGORY
+        under_total_cap = len(capped) < SOFT_CAP
+        if must_include or (under_cat_cap and under_total_cap):
+            capped.append(item)
+            cat_count[item.category] += 1
+    items = capped
 
     today = date.today().isoformat()
     items_json = _items_to_json(items)

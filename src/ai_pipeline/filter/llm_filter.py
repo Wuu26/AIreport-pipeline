@@ -19,11 +19,14 @@ Return a JSON object with these exact fields:
 - reason: str (one sentence explanation)
 - category: one of "paper", "news", "china", "oss", "funding", "skip"
 
-Scoring criteria:
-- 0.9+: Groundbreaking paper from top institution, major product launch, large funding round (≥$50M)
-- 0.7-0.9: Solid research, notable industry news, interesting open source
-- 0.5-0.7: Relevant but not exceptional
-- 0.0-0.5: Low quality, spam, or irrelevant
+Scoring criteria (be STRICT — default to lower scores, quality over quantity):
+- 0.9+: Truly groundbreaking (new flagship model/benchmark from top lab, ≥$100M funding, major policy shift)
+- 0.75-0.9: Solid and noteworthy (strong research paper, significant product launch, ≥$50M funding, major open source release)
+- 0.6-0.75: Relevant but not exceptional — only score here if clearly worth reading
+- below 0.6: Routine updates, incremental work, low-signal content, blog posts without substance
+
+When in doubt, score lower. Most items should score below 0.75.
+The threshold is 0.75, so only the top ~25% of content should pass.
 
 Category guide:
 - paper: academic papers, research preprints

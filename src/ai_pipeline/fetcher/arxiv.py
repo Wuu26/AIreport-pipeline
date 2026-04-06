@@ -20,7 +20,10 @@ async def fetch_arxiv(client: httpx.AsyncClient) -> list[RawItem]:
         "sortOrder": "descending",
         "max_results": ARXIV_MAX_RESULTS,
     }
-    resp = await client.get(ARXIV_API_URL, params=params, timeout=30)
+    headers = {
+        "User-Agent": "AIreportPipeline/1.0 (research project; github.com/Wuu26/AIreport-pipeline)"
+    }
+    resp = await client.get(ARXIV_API_URL, params=params, headers=headers, timeout=30)
     resp.raise_for_status()
     return _parse_arxiv_xml(resp.text)
 

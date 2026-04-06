@@ -9,14 +9,14 @@ DEEPSEEK_API_KEY: str = os.environ.get("DEEPSEEK_API_KEY", "")
 DEEPSEEK_BASE_URL: str = "https://api.deepseek.com"
 DEEPSEEK_MODEL: str = "deepseek-chat"
 LLM_CONCURRENCY: int = 5          # max parallel LLM calls in filter
-SCORE_THRESHOLD: float = 0.6
+SCORE_THRESHOLD: float = 0.75
 
 # Slack
 SLACK_WEBHOOK_URL: str = os.environ.get("SLACK_WEBHOOK_URL", "")
 
 # arXiv
 ARXIV_CATEGORIES = ["cs.AI", "cs.LG", "cs.CL", "cs.CV"]
-ARXIV_MAX_RESULTS = 20
+ARXIV_MAX_RESULTS = 15
 
 # RSS sources: (name, url, category_hint)
 RSS_SOURCES = [
@@ -30,7 +30,7 @@ RSS_SOURCES = [
 ]
 
 # Coarse filter rules
-MIN_UPVOTES_HF = 5          # minimum HuggingFace upvotes to pass coarse filter
+MIN_UPVOTES_HF = 10         # minimum HuggingFace upvotes to pass coarse filter
 MAX_AGE_HOURS = 36          # only items published within this window
 KEYWORD_BLACKLIST = [
     "sponsored", "advertisement", "partner content",
