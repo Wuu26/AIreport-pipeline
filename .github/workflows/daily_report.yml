@@ -1,9 +1,7 @@
 name: AI Daily Report
 
 on:
-  schedule:
-    - cron: '0 1 * * *'   # 09:00 Beijing time (UTC+8)
-  workflow_dispatch:        # allow manual trigger
+  workflow_dispatch:        # manual trigger only
 
 jobs:
   report:
