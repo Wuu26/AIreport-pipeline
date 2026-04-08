@@ -1,9 +1,6 @@
 name: Finance Market Report
 
 on:
-  schedule:
-    - cron: '0 0 * * 1-5'    # 08:00 Beijing time (UTC+8), weekdays only
-    - cron: '30 13 * * 1-5'  # 21:30 Beijing time (UTC+8), weekdays only
   workflow_dispatch:
     inputs:
       mode:
